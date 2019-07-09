@@ -1,0 +1,38 @@
+version: '3'
+services:
+    database:
+        container_name: autocomplete-db
+        image: mongo:4.1.11-bionic
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=123@Abc
+            - MONGO_INITDB_DATABASE=apigithub
+        volumes:
+            - ./database/data:/data/db
+            - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+        ports:
+            - 3006:27017
+            
+    api:
+        container_name: autocomplete-api
+        build:
+            context: ./api
+            dockerfile: ./docker/node/Dockerfile
+        depends_on:
+            - database
+        volumes:
+            - ./api/:/usr/src/app
+        ports:
+            - 3005:3000
+    
+    frontend:
+        container_name: autocomplete-front
+        build:
+            context: ./front
+            dockerfile: ./docker/react/Dockerfile
+        depends_on:
+            - api
+        volumes:
+            - ./front/:/usr/src/app
+        ports:
+            - 3007:80
