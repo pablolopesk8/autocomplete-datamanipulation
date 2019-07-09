@@ -1,0 +1,16 @@
+/* eslint-disable */
+db.auth("admin","123@Abc")
+db.events.find().pretty()
+
+// insert event with only required attrs
+db.events.insert({
+    event: "buy",
+    date: new Date("2019-07-09T20:03:42.780Z")
+})
+// insert event with some attrs
+db.events.insert({
+    event: "buy",
+    date: new Date("2019-07-09T20:03:42.780Z"),
+    other: "123",
+    another: 123
+})
