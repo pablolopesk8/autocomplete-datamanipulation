@@ -17,7 +17,7 @@ describe('Events Service Test', () => {
             try {
                 await SaveEvent(event);
             } catch (err) {
-                err.should.have.property('message');
+                err.should.have.property('message').and.be.equal('required-event');
             }
         });
         it(`Should be able to save an event with correct data`, async () => {
