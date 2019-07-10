@@ -1,5 +1,6 @@
 /* eslint-disable */
 db.auth("admin","123@Abc")
+db.auth("admin_autocompleteevents","Xyz@789")
 db.events.find().pretty()
 
 // insert event with only required attrs
