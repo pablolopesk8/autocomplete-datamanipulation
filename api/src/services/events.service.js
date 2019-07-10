@@ -5,8 +5,9 @@ const Events = require('../models/events.model');
 
 /**
  * Save an event and return the saved data
- * @param {Object} event 
+ * @param {Object} event object supposed to have event (String) and date (Date)
  * @throws {Error}
+ * @returns {Object|MongooseSchema}
  */
 const SaveEvent = async (event) => {
     try {
