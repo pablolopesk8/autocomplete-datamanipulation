@@ -12,8 +12,8 @@ describe('Events Service Test', () => {
         await DBCloseConnection();
     });
     describe('Save Event', () => {
-        it(`Should give an error if pass an event with incorrect data`, async () => {
-            const event = { event: null, date: 123 };
+        it(`Should give an error if pass an event with wrong event attribute`, async () => {
+            const event = { event: null, date: new Date("2019-07-09T20:03:42.780Z") };
             try {
                 await SaveEvent(event);
             } catch (err) {
