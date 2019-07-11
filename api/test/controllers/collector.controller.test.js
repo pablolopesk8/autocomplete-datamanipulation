@@ -73,4 +73,87 @@ describe('Controller Collector Test', () => {
             res.status.calledWith(200).should.equal(true);
         });
     });
+    describe('Events - Get', () => {
+        before(async () => {
+            // create events to be used in tests
+            await Events.create({ event: 'buy', date: '2016-09-22T13:57:31.2311892-04:00' });
+            await Events.create({ event: 'build', date: '2016-09-22T14:57:31.2311892-04:00' });
+            await Events.create({ event: 'burn', date: '2016-09-22T15:57:31.2311892-04:00' });
+            await Events.create({ event: 'sale', date: '2016-09-23T13:57:31.2311892-04:00' });
+            await Events.create({ event: 'salt', date: '2016-09-23T14:57:31.2311892-04:00' });
+            await Events.create({ event: 'say', date: '2016-09-23T15:57:31.2311892-04:00' });
+            await Events.create({ event: 'sit', date: '2016-09-23T16:57:31.2311892-04:00' });
+            await Events.create({ event: 'run', date: '2016-09-24T13:57:31.2311892-04:00' });
+        });
+        after(async () => {
+            // delete events used in tests
+            await Events.deleteMany({ event: "buy" });
+            await Events.deleteMany({ event: "build" });
+            await Events.deleteMany({ event: "salt" });
+            await Events.deleteMany({ event: "burn" });
+            await Events.deleteMany({ event: "say" });
+            await Events.deleteMany({ event: "run" });
+            await Events.deleteMany({ event: "sit" });
+            await Events.deleteMany({ event: "sale" });
+        });
+        it('Should have a name in query parameter', async () => {
+            const req = { query: {} };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(422).should.equal(true);
+            res.send.calledWith('name is required in query parameters').should.equal(true);
+        });
+        it('Should have a name, in string format, in query parameter', async () => {
+            const req = { query: { name: 123 } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(422).should.equal(true);
+            res.send.calledWith('name must be string').should.equal(true);
+        });
+        it('Should have a name, with least two characters, in query parameter', async () => {
+            const req = { query: { name: "q" } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(422).should.equal(true);
+            res.send.calledWith('name must have least two characters').should.equal(true);
+        });
+        it('Should successfully empty if name, in query parameter, match with no one item', async () => {
+            const req = { query: { name: "none" } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(204).should.equal(true);
+        });
+        it('Should successfully if name, in query parameter, match exactly with one item', async () => {
+            const req = { query: { name: "buy" } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(200).should.equal(true);
+        });
+        it('Should successfully if name, in query parameter, match with one item', async () => {
+            const req = { query: { name: "ru" } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(200).should.equal(true);
+        });
+        it('Should successfully if name, in query parameter, match with more than one item', async () => {
+            const req = { query: { name: "sa" } };
+            const res = { status: sinon.spy(), send: sinon.spy() };
+
+            await CollectorController.getEventsByName(req, res);
+
+            res.status.calledWith(200).should.equal(true);
+        });
+    });
 });
