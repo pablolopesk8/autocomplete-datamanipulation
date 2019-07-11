@@ -2,19 +2,18 @@ const Ajv = require('ajv');
 const ajv = new Ajv({errorDataPath: 'property'});
 
 /**
- * Method to validate event data
+ * Method to validate data
  * @param {Object} data 
- * @throws {Error} error specifying if field required (required-field), invalid (type-field) or malformatted
+ * @throws {Error} error specifying if field required (required-field), invalid (type-field)
  * @returns {boolean} true
  */
 const validator = async (data) => {
     // schema to validate event
     const schema = {
         properties: {
-            event: { type: "string" },
-            date: { type: "string", format: "date-time" }
+            name: { type: "string", minLength: 2 }
         },
-        required: ["event", "date"]
+        required: ["name"]
     }
 
     // get he result of validation
@@ -33,4 +32,4 @@ const validator = async (data) => {
     }
 }
 
-module.exports = { eventValidator: validator };
+module.exports = { eventNameValidator: validator };
