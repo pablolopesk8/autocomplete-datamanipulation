@@ -12,11 +12,13 @@ const controller = function () {
      */
     const postEvent = async (req, res) => {
         try {
+            const { event, timestamp: date } = req.body;
+
             // validation
-            await eventValidator(req.body);
+            await eventValidator({event, date});
 
             // saving event
-            const savedEvent = await SaveEvent({ event: req.body.event, date: new Date(req.body.date) });
+            const savedEvent = await SaveEvent({ event, date: new Date(date) });
 
             res.status(200);
             return res.send(savedEvent);
@@ -31,13 +33,13 @@ const controller = function () {
                     return res.send("event must be string");
                 case "required-date":
                     res.status(422);
-                    return res.send("date is required");
+                    return res.send("timestamp is required");
                 case "type-date":
                     res.status(422);
-                    return res.send("date must be string");
+                    return res.send("timestamp must be string");
                 case "format-date":
                     res.status(422);
-                    return res.send("date must be in date format");
+                    return res.send("timestamp must be in date format");
                 default:
                     res.status(500);
                     return res.send("General Error");

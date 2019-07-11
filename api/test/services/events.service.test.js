@@ -12,6 +12,9 @@ describe('Events Service Test', () => {
         await DBCloseConnection();
     });
     describe('Save Event', () => {
+        after(async () => {
+            await Events.deleteMany({ event: "eventName" });
+        });
         it(`Should give an error if pass an event with wrong event attribute`, async () => {
             const event = { event: null, date: new Date("2019-07-09T20:03:42.780Z") };
             try {
@@ -29,9 +32,6 @@ describe('Events Service Test', () => {
             const eventSaved = await Events.findOne({ event: "eventName" });
             eventSaved.should.have.properties(['_id', 'event', 'date']);
             eventSaved.event.should.be.equal('eventName');
-        });
-        after(async () => {
-            await Events.deleteMany({ event: "eventName" });
         });
     });
 });

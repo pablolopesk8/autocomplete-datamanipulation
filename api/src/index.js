@@ -15,6 +15,9 @@ const config = require('./config');
 // Get database
 const { DBConnect } = require('./services/db.service');
 
+// Get routers
+const collectorRouter = require('./routers/collector.router');
+
 DBConnect().then(
     () => {
         /*** the server is only started if connected successfully on database ***/
@@ -23,6 +26,9 @@ DBConnect().then(
         server.get('/', (req, res) => {
             res.send('Autocomplete API is working!!!');
         });
+
+        // use routers for collector
+        server.use('/collector', collectorRouter);
 
         // start server on the port defined by env
         server.app = server.listen(config.portApi, () => {
