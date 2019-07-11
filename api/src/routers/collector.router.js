@@ -6,6 +6,7 @@ const collectorController = require('../controllers/collector.controller');
  * Router to get starred repos, filtering by tags or not
  */
 collectorRouter.route('/events')
-    .post(collectorController.postEvent);
+    .post(collectorController.postEvent)
+    .get(collectorController.getEventsByName);
 
 module.exports = collectorRouter;
