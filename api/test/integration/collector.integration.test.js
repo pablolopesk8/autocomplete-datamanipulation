@@ -6,7 +6,7 @@ const should = require('should'); // eslint-disable-line
 const { DBCloseConnection } = require('../../src/services/db.service');
 const Events = require('../../src/models/events.model');
 
-describe('Controller Collector Test', () => {
+describe('Collector Integration Test', () => {
     let agent;
     let server;
 
