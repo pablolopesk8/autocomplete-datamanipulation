@@ -17,5 +17,5 @@ module.exports = {
     mongodbDatabase: process.env.MONGODB_DATABASE,
 
     // other variables
-    eventsJsonUrl: process.env.EVENTS_JSON_URL
+    eventsJsonUrl: "https://storage.googleapis.com/dito-questions/events.json"
 }
