@@ -46,4 +46,76 @@ const GetEventsByEvent = async (name) => {
     }
 }
 
-module.exports = { SaveEvent, GetEventsByEvent };
+const GroupByTransaction = async (eventList) => {
+    let transactionProducts = {};
+    let transactionData = {};
+
+    for (let i = 0, len = eventList.events.length; i < len; i++) {
+        for (let j = 0, lenJ = eventList.events[i].custom_data.length; j < lenJ; j++) {
+            if (eventList.events[i].custom_data[j].key === 'transaction_id') {
+                let tempTransactionId = eventList.events[i].custom_data[j].value;
+
+                if (eventList.events[i].event === 'comprou-produto') {
+                    if (!transactionProducts[tempTransactionId]) {
+                        transactionProducts[tempTransactionId] = [];
+                    }
+
+                    let tempProduct = {};
+
+                    for (let k = 0, lenK = eventList.events[i].custom_data.length; k < lenK; k++) {
+                        if (eventList.events[i].custom_data[k].key === 'product_name') {
+                            tempProduct.name = eventList.events[i].custom_data[k].value;
+                        } else if (eventList.events[i].custom_data[k].key === 'product_price') {
+                            tempProduct.price = eventList.events[i].custom_data[k].value;
+                        }
+                    }
+
+                    transactionProducts[tempTransactionId].push(tempProduct);
+                } else if (eventList.events[i].event === 'comprou') {
+                    if (!transactionData[tempTransactionId]) {
+                        transactionData[tempTransactionId] = [];
+                    }
+
+                    let tempData = {
+                        timestamp: eventList.events[i].timestamp,
+                        revenue: eventList.events[i].revenue,
+                        transactionId: tempTransactionId
+                    };
+
+                    for (let k = 0, lenK = eventList.events[i].custom_data.length; k < lenK; k++) {
+                        if (eventList.events[i].custom_data[k].key === 'store_name') {
+                            tempData.storeName = eventList.events[i].custom_data[k].value;
+                        }
+                    }
+
+                    transactionData[tempTransactionId] = tempData;
+                }
+            }
+        }
+    }
+
+    const orderedTimestamp = [];
+    for (let item in transactionData) {
+        orderedTimestamp.push(transactionData[item]);
+    }
+    orderedTimestamp.sort((a, b) => {
+        if (a.timestamp > b.timestamp) return -1;
+        else if (a.timestamp < b.timestamp) return 1;
+        else return 0;
+    });
+
+    const timeline = { timeline: [] };
+    for (let item of orderedTimestamp) {
+        timeline.timeline.push({
+            timestamp: item.timestamp,
+            revenue: item.revenue,
+            transaction_id: item.transactionId,
+            store_name: item.storeName,
+            products: transactionProducts[item.transactionId] ? transactionProducts[item.transactionId] : []
+        });
+    }
+    
+    return timeline;
+}
+
+module.exports = { SaveEvent, GetEventsByEvent, GroupByTransaction };

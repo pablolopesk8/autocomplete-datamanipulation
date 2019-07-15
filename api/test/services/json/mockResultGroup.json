@@ -1,0 +1,59 @@
+{
+    "timeline": [
+        {
+            "timestamp": "2019-07-12T11:37:31.2300892-03:00",
+            "revenue": 500.0,
+            "transaction_id": "3409341",
+            "store_name": "Diamond Mall",
+            "products": []
+        },
+        {
+            "timestamp": "2019-07-12T11:37:30.2300892-03:00",
+            "revenue": 200.0,
+            "transaction_id": "3409342",
+            "store_name": "Minas Shopping",
+            "products": [
+                {
+                    "name": "Cinto Marrom",
+                    "price": 20
+                },
+                {
+                    "name": "Calça Preta",
+                    "price": 100
+                },
+                {
+                    "name": "Blusa Azul",
+                    "price": 80
+                }
+            ]
+        },
+        {
+            "timestamp": "2016-10-02T11:37:31.2300892-03:00",
+            "revenue": 120.0,
+            "transaction_id": "3409340",
+            "store_name": "BH Shopping",
+            "products": [
+                {
+                    "name": "Tenis Preto",
+                    "price": 120
+                }
+            ]
+        },
+        {
+            "timestamp": "2016-09-22T13:57:31.2311892-03:00",
+            "revenue": 250.0,
+            "transaction_id": "3029384",
+            "store_name": "Patio Savassi",
+            "products": [
+                {
+                    "name": "Camisa Azul",
+                    "price": 100
+                },
+                {
+                    "name": "Calça Rosa",
+                    "price": 150
+                }
+            ]
+        }
+    ]
+}

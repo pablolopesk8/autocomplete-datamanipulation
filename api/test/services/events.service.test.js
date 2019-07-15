@@ -1,7 +1,8 @@
 const should = require('should'); // eslint-disable-line
-const { SaveEvent, GetEventsByEvent } = require('../../src/services/events.service');
+const { SaveEvent, GetEventsByEvent, GroupByTransaction } = require('../../src/services/events.service');
 const Events = require('../../src/models/events.model');
 const { DBConnect, DBCloseConnection } = require('../../src/services/db.service');
+const fs = require('fs');
 
 describe('Events Service Test', () => {
     // force open and close connection with DB, because it's necessary to execution of this test
@@ -87,6 +88,18 @@ describe('Events Service Test', () => {
             const result = await GetEventsByEvent(string);
             result.should.have.length(1);
             result[0].should.have.property('event').and.be.equal(string);
+        });
+    });
+    describe('Group By Transaction', () => {
+        it(`Should get an timeline array, ordened by timestamp and grouped by transaction`, async () => {
+            let eventsList = await fs.readFileSync(`${__dirname}/json/mockOnlineJson.json`);
+            eventsList = JSON.parse(eventsList);
+            let expectedResult = await fs.readFileSync(`${__dirname}/json/mockResultGroup.json`);
+            expectedResult = JSON.parse(expectedResult);
+
+            const result = await GroupByTransaction(eventsList);
+
+            result.should.be.deepEqual(expectedResult);
         });
     });
 });
