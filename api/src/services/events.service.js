@@ -46,66 +46,51 @@ const GetEventsByEvent = async (name) => {
     }
 }
 
+/**
+ * Group all events by transaction
+ * @param {Object} eventList object with a list of events
+ * @returns {Object|Array}
+ */
 const GroupByTransaction = async (eventList) => {
-    let transactionProducts = {};
-    let transactionData = {};
+    const transactionProducts = {};
+    const transactionData = {};
 
+    // interate over events and inside each event, iterate over the custom data
     for (let i = 0, len = eventList.events.length; i < len; i++) {
         for (let j = 0, lenJ = eventList.events[i].custom_data.length; j < lenJ; j++) {
+            // the mainly data is transaction_id
             if (eventList.events[i].custom_data[j].key === 'transaction_id') {
-                let tempTransactionId = eventList.events[i].custom_data[j].value;
+                let transactionId = eventList.events[i].custom_data[j].value;
 
+                // if event type is comprou-produto, get the products of the transaction
                 if (eventList.events[i].event === 'comprou-produto') {
-                    if (!transactionProducts[tempTransactionId]) {
-                        transactionProducts[tempTransactionId] = [];
+                    if (!transactionProducts[transactionId]) {
+                        transactionProducts[transactionId] = [];
+                    }
+                    transactionProducts[transactionId].push(GetTransactionProducts(eventList.events[i].custom_data));
+                }// if event type is comprou, get data about the transaction
+                else if (eventList.events[i].event === 'comprou') {
+                    if (!transactionData[transactionId]) {
+                        transactionData[transactionId] = [];
                     }
 
-                    let tempProduct = {};
-
-                    for (let k = 0, lenK = eventList.events[i].custom_data.length; k < lenK; k++) {
-                        if (eventList.events[i].custom_data[k].key === 'product_name') {
-                            tempProduct.name = eventList.events[i].custom_data[k].value;
-                        } else if (eventList.events[i].custom_data[k].key === 'product_price') {
-                            tempProduct.price = eventList.events[i].custom_data[k].value;
-                        }
-                    }
-
-                    transactionProducts[tempTransactionId].push(tempProduct);
-                } else if (eventList.events[i].event === 'comprou') {
-                    if (!transactionData[tempTransactionId]) {
-                        transactionData[tempTransactionId] = [];
-                    }
-
-                    let tempData = {
+                    transactionData[transactionId] = {
                         timestamp: eventList.events[i].timestamp,
                         revenue: eventList.events[i].revenue,
-                        transactionId: tempTransactionId
+                        transactionId: transactionId,
+                        storeName: GetTransactionStore(eventList.events[i].custom_data)
                     };
-
-                    for (let k = 0, lenK = eventList.events[i].custom_data.length; k < lenK; k++) {
-                        if (eventList.events[i].custom_data[k].key === 'store_name') {
-                            tempData.storeName = eventList.events[i].custom_data[k].value;
-                        }
-                    }
-
-                    transactionData[tempTransactionId] = tempData;
                 }
             }
         }
     }
 
-    const orderedTimestamp = [];
-    for (let item in transactionData) {
-        orderedTimestamp.push(transactionData[item]);
-    }
-    orderedTimestamp.sort((a, b) => {
-        if (a.timestamp > b.timestamp) return -1;
-        else if (a.timestamp < b.timestamp) return 1;
-        else return 0;
-    });
+    // order the transactions, using the timestamp and type desc
+    const orderedTransactions = OrderTransactions(transactionData);
 
+    // generate the timeline, using ordered transactions
     const timeline = { timeline: [] };
-    for (let item of orderedTimestamp) {
+    for (let item of orderedTransactions) {
         timeline.timeline.push({
             timestamp: item.timestamp,
             revenue: item.revenue,
@@ -114,8 +99,63 @@ const GroupByTransaction = async (eventList) => {
             products: transactionProducts[item.transactionId] ? transactionProducts[item.transactionId] : []
         });
     }
-    
+
     return timeline;
+}
+
+/**
+ * Get product informations about the transaction
+ * @param {Array} customData array of objects
+ * @returns {Object}
+ */
+const GetTransactionProducts = (customData) => {
+    let product = {};
+
+    // iterate over data getting the product name and price
+    for (let i = 0, len = customData.length; i < len; i++) {
+        if (customData[i].key === 'product_name') {
+            product.name = customData[i].value;
+        } else if (customData[i].key === 'product_price') {
+            product.price = customData[i].value;
+        }
+    }
+
+    return product;
+}
+
+/**
+ * Get the name of the store
+ * @param {Array} customData array of objects
+ * @returns {String}
+ */
+const GetTransactionStore = (customData) => {
+    for (let i = 0, len = customData.length; i < len; i++) {
+        if (customData[i].key === 'store_name') {
+            return customData[i].value;
+        }
+    }
+}
+
+/**
+ * Order a list of transactions, using a by and a type
+ * @param {Object} transactionData 
+ * @param {String} orderBy 
+ * @param {String} orderType 
+ * @returns {Array}
+ */
+const OrderTransactions = (transactionData, orderBy = 'timestamp', orderType = 'desc') => {
+    // convert the object into array
+    const transactionDataArray = [];
+    for (let item in transactionData) {
+        transactionDataArray.push(transactionData[item]);
+    }
+
+    // returns the array ordered as necessary
+    return transactionDataArray.sort((a, b) => {
+        if (a[orderBy] > b[orderBy]) return orderType === 'desc' ? -1 : 1;
+        else if (a[orderBy] < b[orderBy]) return orderType === 'desc' ? 1 : -1;
+        else return 0;
+    });
 }
 
 module.exports = { SaveEvent, GetEventsByEvent, GroupByTransaction };

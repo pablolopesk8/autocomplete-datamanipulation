@@ -91,7 +91,7 @@ describe('Events Service Test', () => {
         });
     });
     describe('Group By Transaction', () => {
-        it(`Should get an timeline array, ordened by timestamp and grouped by transaction`, async () => {
+        it(`Should get an timeline array, grouped by transaction and ordered by timestamp`, async () => {
             let eventsList = await fs.readFileSync(`${__dirname}/json/mockOnlineJson.json`);
             eventsList = JSON.parse(eventsList);
             let expectedResult = await fs.readFileSync(`${__dirname}/json/mockResultGroup.json`);
