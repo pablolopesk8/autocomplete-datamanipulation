@@ -48,7 +48,7 @@ const GetEventsByEvent = async (name) => {
 
 /**
  * Group all events by transaction
- * @param {Object} eventList object with a list of events
+ * @param {Array} eventList 
  * @returns {Object|Array}
  */
 const GroupByTransaction = async (eventList) => {
@@ -56,29 +56,29 @@ const GroupByTransaction = async (eventList) => {
     const transactionData = {};
 
     // interate over events and inside each event, iterate over the custom data
-    for (let i = 0, len = eventList.events.length; i < len; i++) {
-        for (let j = 0, lenJ = eventList.events[i].custom_data.length; j < lenJ; j++) {
+    for (let i = 0, len = eventList.length; i < len; i++) {
+        for (let j = 0, lenJ = eventList[i].custom_data.length; j < lenJ; j++) {
             // the mainly data is transaction_id
-            if (eventList.events[i].custom_data[j].key === 'transaction_id') {
-                let transactionId = eventList.events[i].custom_data[j].value;
+            if (eventList[i].custom_data[j].key === 'transaction_id') {
+                let transactionId = eventList[i].custom_data[j].value;
 
                 // if event type is comprou-produto, get the products of the transaction
-                if (eventList.events[i].event === 'comprou-produto') {
+                if (eventList[i].event === 'comprou-produto') {
                     if (!transactionProducts[transactionId]) {
                         transactionProducts[transactionId] = [];
                     }
-                    transactionProducts[transactionId].push(GetTransactionProducts(eventList.events[i].custom_data));
+                    transactionProducts[transactionId].push(GetTransactionProducts(eventList[i].custom_data));
                 }// if event type is comprou, get data about the transaction
-                else if (eventList.events[i].event === 'comprou') {
+                else if (eventList[i].event === 'comprou') {
                     if (!transactionData[transactionId]) {
                         transactionData[transactionId] = [];
                     }
 
                     transactionData[transactionId] = {
-                        timestamp: eventList.events[i].timestamp,
-                        revenue: eventList.events[i].revenue,
+                        timestamp: eventList[i].timestamp,
+                        revenue: eventList[i].revenue,
                         transactionId: transactionId,
-                        storeName: GetTransactionStore(eventList.events[i].custom_data)
+                        storeName: GetTransactionStore(eventList[i].custom_data)
                     };
                 }
             }
