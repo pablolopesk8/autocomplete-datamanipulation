@@ -75,16 +75,8 @@ describe('Events Service Test', () => {
             result[0].should.have.property('event').and.be.equal('sale');
             result[1].should.have.property('event').and.be.equal('salt');
         });
-        it(`Should get three ordered items if string passed match with three events`, async () => {
-            const string = 'bu';
-            const result = await GetEventsByEvent(string);
-            result.should.have.length(3);
-            result[0].should.have.property('event').and.be.equal('build');
-            result[1].should.have.property('event').and.be.equal('burn');
-            result[2].should.have.property('event').and.be.equal('buy');
-        });
         it(`Should get one item if string passed match exactly with one event`, async () => {
-            const string = 'buy';
+            const string = 'run';
             const result = await GetEventsByEvent(string);
             result.should.have.length(1);
             result[0].should.have.property('event').and.be.equal(string);

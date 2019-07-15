@@ -5,3 +5,5 @@ Auto complete and Data Manipulation service to resolve the Challenge for hiring 
 ## obs
 
 A API para inserir events recebe a data tanto com complete timestamp ou quebrado. No complete, ela insere com o fuso horario definido
+
+<https://github.com/moroshko/react-autosuggest#installation>

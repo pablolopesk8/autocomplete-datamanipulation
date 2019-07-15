@@ -67,7 +67,8 @@ const controller = function () {
             // get events and return 204 if empty or the events array
             const events = await GetEventsByEvent(name);
             if (events.length <= 0) {
-                return res.status(204);
+                res.status(204);
+                return res.send();
             } else {
                 res.status(200);
                 return res.send(events);

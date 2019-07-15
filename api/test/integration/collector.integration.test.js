@@ -5,8 +5,9 @@
 const should = require('should'); // eslint-disable-line
 const { DBCloseConnection } = require('../../src/services/db.service');
 const Events = require('../../src/models/events.model');
+const fs = require('fs');
 
-describe('Collector Integration Test', () => {
+describe('Integration Test', () => {
     let agent;
     let server;
 
@@ -20,10 +21,10 @@ describe('Collector Integration Test', () => {
         });
     });
     after(async () => {
-        server.app.close();
+        await server.app.close();
         await DBCloseConnection();
     });
-    describe('Events - Post', () => {
+    describe('Collector - Events - Post', () => {
         after(async () => {
             await Events.deleteMany({ event: "eventIntegration" });
         });
@@ -53,7 +54,7 @@ describe('Collector Integration Test', () => {
                 });
         });
     });
-    describe('Events - Get', () => {
+    describe('Collector - Events - Get', () => {
         before(async () => {
             // create events to be used in tests
             await Events.create({ event: 'buy', date: '2016-09-22T13:57:31.2311892-04:00' });
@@ -77,7 +78,7 @@ describe('Collector Integration Test', () => {
             await Events.deleteMany({ event: "sale" });
         });
         it('Should be able to get one event, sending a name that match exactly with one event', async () => {
-            const name = "buy";
+            const name = "run";
             await agent.get(`/collector/events`)
                 .query({ name: name })
                 .expect(200)
@@ -109,6 +110,24 @@ describe('Collector Integration Test', () => {
                     results.body.should.matchEach((item) => {
                         item.should.have.property('event').and.be.match(new RegExp(name));
                     });
+                });
+        });
+        it('Should be able to get status 204, sending a name that match with no one event', async () => {
+            const name = "zz";
+            await agent.get(`/collector/events`)
+                .query({ name: name })
+                .expect(204);
+        });
+    });
+    describe('Datamanipulation - Timeline - Get', () => {
+        it('Should be able to return the right timeline', async () => {
+            await agent.get(`/datamanipulation/timeline`)
+                .query()
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .then(async (results) => {
+                    const expectedResult = await fs.readFileSync(`${__dirname}/json/mockResultTimeline.json`);
+                    results.body.should.be.deepEqual(JSON.parse(expectedResult));
                 });
         });
     });
