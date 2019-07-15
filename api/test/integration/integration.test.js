@@ -1,5 +1,5 @@
 /**
- * File to make tests about integration involving collector api
+ * File to make tests about integration involving the API
  * Using fake data, is possible verify if the call of the methods exposed by API get the correct result
  */
 const should = require('should'); // eslint-disable-line
