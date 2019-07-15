@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Counter from "./Counter";
+import Autocomplete from "./Autocomplete";
 
 document.addEventListener("DOMContentLoaded", function () {
     ReactDOM.render(
-        React.createElement(Counter),
+        React.createElement(Autocomplete),
         document.getElementById("mount")
     );
 });
