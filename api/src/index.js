@@ -17,6 +17,7 @@ const { DBConnect } = require('./services/db.service');
 
 // Get routers
 const collectorRouter = require('./routers/collector.router');
+const dataManipulationRouter = require('./routers/dataManipulation.router');
 
 DBConnect().then(
     () => {
@@ -27,8 +28,9 @@ DBConnect().then(
             res.send('Autocomplete API is working!!!');
         });
 
-        // use routers for collector
+        // use routers for collector and data manipulator
         server.use('/collector', collectorRouter);
+        server.use('/datamanipulation', dataManipulationRouter);
 
         // start server on the port defined by env
         server.app = server.listen(config.portApi, () => {

@@ -51,7 +51,7 @@ const GetEventsByEvent = async (name) => {
  * @param {Array} eventList 
  * @returns {Object|Array}
  */
-const GroupByTransaction = async (eventList) => {
+const GroupByTransaction = (eventList) => {
     const transactionProducts = {};
     const transactionData = {};
 
