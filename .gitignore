@@ -72,6 +72,3 @@ database/data/**/*
 
 # OSX
 .DS_Store
-
-# Postman file
-*.postman_collection.json

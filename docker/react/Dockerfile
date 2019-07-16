@@ -1,12 +1,16 @@
-# https://dev.to/peterj/run-a-react-app-in-a-docker-container-kjn
-FROM node:10.16-alpine AS builder
-WORKDIR /app
-COPY ./ ./
-RUN yarn run build
+FROM node:10.16
+# Create app directory
+WORKDIR /usr/src/app
 
-FROM node:10.16-alpine
-RUN yarn global add serve
-WORKDIR /app
-COPY --from=builder /app/build .
-EXPOSE 80
-CMD serve -p 80 -s .
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied where available (npm@5+)
+COPY ./front/package*.json ./
+RUN npm install
+# If you are building your code for production
+# RUN npm i --only=production
+
+EXPOSE 3000
+
+# CMD npm install && npm run start:dev
+# If you are building your code for production
+CMD npm install && npm start

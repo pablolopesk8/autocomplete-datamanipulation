@@ -16,7 +16,7 @@ services:
     api:
         container_name: autocomplete-api
         build:
-            context: ./api
+            context: .
             dockerfile: ./docker/node/Dockerfile
         depends_on:
             - database
@@ -28,11 +28,11 @@ services:
     frontend:
         container_name: autocomplete-front
         build:
-            context: ./front
+            context: .
             dockerfile: ./docker/react/Dockerfile
         depends_on:
             - api
         volumes:
             - ./front/:/usr/src/app
         ports:
-            - 3007:80
+            - 3007:3000

@@ -12,21 +12,21 @@ db.createUser(
 
 /** create users collection with a schema validator **/
 /* db.runCommand( {
-    collMod: "contacts", */
+    collMod: "events", */
 db.createCollection("events", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["event", "timestamp"],
+            required: ["event", "date"],
             additionalProperties: true,
             properties: {
                 event: {
                     bsonType: "string",
                     description: "string required"
                 },
-                timestamp: {
-                    bsonType: "timestamp",
-                    description: "timestamp required"
+                date: {
+                    bsonType: "date",
+                    description: "date required"
                 }
             }
         }
