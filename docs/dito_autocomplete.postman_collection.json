@@ -40,7 +40,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{localhostPort}}/collector/events?name=buy",
+							"raw": "http://localhost:{{localhostPort}}/collector/events?name=bu",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -53,10 +53,11 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "buy"
+									"value": "bu"
 								}
 							]
-						}
+						},
+						"description": "# Description\n\nPart of the solution for the question *1 - Serviço de Autocomplete - API Coletora*.  \nGet a list of events, filtering by name of event\n\n## Request\n\nMust send a name, with at least 2 characters, on query string\n\n## Response\n\nThe return will be an array of events, like this:\n\n```json\n{\n\tevent: \"buy\",\n\ttimestamp: \"2016-09-22T13:57:31.2311892-04:00\"\n}\n```"
 					},
 					"response": []
 				},
@@ -87,7 +88,8 @@
 								"collector",
 								"events"
 							]
-						}
+						},
+						"description": "# Description\n\nPart of the solution for the question *1 - Serviço de Autocomplete - Autocomplete*.  \nPost a new event to be saved on Database.  \nThe event will be inserted on timezone provided in timestamp data.\n\n## Request\n\nThe object that must be sent for server is like this:\n\n\n```json\n{\n\tevent: \"run\",\n\ttimestamp: \"2019-07-15T14:04:31.2311892-05:00\"\n}\n```\n\nThe timestamp can be complente (like above), or minimal like *2019-07-15T14:04:31.231Z*.  \nThe timezone contained on timestamp will be used to created the date and save the data.\n\n## Response\n\nThe return will be the event saved, like this:\n\n\n```json\n{\n\t_id: ObjectID(5443637958463)\n\tevent: \"run\",\n\ttimestamp: \"2019-07-15T14:04:31.2311892-05:00\"\n}\n```"
 					},
 					"response": []
 				},
@@ -107,7 +109,8 @@
 								"datamanipulation",
 								"timeline"
 							]
-						}
+						},
+						"description": "# Description\n\nSolution for the question *2 - Manipulação de Dados*.  \nReturn a timeline array, with the data got on the [url](https://storage.googleapis.com/dito-questions/events.json), grouped by **transaction_id** and ordered by **timestamp**\n\n## Request\n\nNone data must be sent.\n\n## Response\n\nA timeline object with an array of events, like this:\n\n\n```json\n{\n    \"timeline\": [\n        {\n            \"timestamp\": \"2016-10-02T11:37:31.2300892-03:00\",\n            \"revenue\": 120.0,\n            \"transaction_id\": \"3409340\",\n            \"store_name\": \"BH Shopping\",\n            \"products\": [\n                {\n                    \"name\": \"Tenis Preto\",\n                    \"price\": 120\n                }\n            ]\n        },\n        {\n            \"timestamp\": \"2016-09-22T13:57:31.2311892-03:00\",\n            \"revenue\": 250.0,\n            \"transaction_id\": \"3029384\",\n            \"store_name\": \"Patio Savassi\",\n            \"products\": [\n                {\n                    \"name\": \"Camisa Azul\",\n                    \"price\": 100\n                },\n                {\n                    \"name\": \"Calça Rosa\",\n                    \"price\": 150\n                }\n            ]\n        }\n    ]\n}\n```"
 					},
 					"response": []
 				}
@@ -138,7 +141,7 @@
 	],
 	"variable": [
 		{
-			"id": "d637799d-5896-4d4b-8c48-1b3615d53775",
+			"id": "52c967b2-46a4-466b-8cf6-40a137b4ba9c",
 			"key": "localhostPort",
 			"value": "3005",
 			"type": "string"
